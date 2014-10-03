@@ -24,7 +24,8 @@
    that are ready to run but not actually running. */
 static struct list ready_list;
 
-/* List of processes in THREAD_BLOCKED states*/
+/* List of processes in THREAD_BLOCKED state, that is, processes
+   that are blocked from running and are sleeping. */
 static struct list sleep_list;
 
 /* List of all processes.  Processes are added to this list

@@ -98,6 +98,7 @@ timer_sleep (int64_t ticks)
   {
      sema_down(*sema);
      //move to sleep_list
+     
   }
  // if (timer_elapsed (start) == ticks)
  // {
@@ -186,7 +187,8 @@ timer_interrupt (struct intr_frame *args UNUSED)
   {
      //move thread to ready_list
   }
-  // figure out where to put sema_up (doesn't have to be in this function); goes somewhere where the code executes in kernel mode
+  // figure out where to put sema_up (doesn't have to be in this function)
+  // goes somewhere where the code executes in kernel mode
 }
 
 /* Returns true if LOOPS iterations waits for more than one timer
