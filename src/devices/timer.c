@@ -9,6 +9,8 @@
 #include "threads/thread.h"
   
 /* See [8254] for hardware details of the 8254 timer chip. */
+extern struct list ready_list;
+extern struct list sleep_list;
 
 #if TIMER_FREQ < 19
 #error 8254 timer requires TIMER_FREQ >= 19
@@ -86,26 +88,23 @@ timer_elapsed (int64_t then)
 
 /* Sleeps for approximately TICKS timer ticks.  Interrupts must
    be turned on. */
+
+//Sophie is driving
 void
 timer_sleep (int64_t ticks) 
 {
-  struct semaphore sema;
-  sema_init(*sema, 0);
   int64_t start = timer_ticks ();
+  
 
   ASSERT (intr_get_level () == INTR_ON);
   if (timer_elapsed (start) < ticks)
   {
-     sema_down(*sema);
-     //move to sleep_list
+     sema_down(thread_current() -> sema);
+     list_push_back(&ready_list, &(thread_current() -> elem));
+     list_remove(&(thread_current() -> elem));
      
   }
- // if (timer_elapsed (start) == ticks)
- // {
- //    sema_up(*sema);
- // }
-}
-
+} 
 /* Sleeps for approximately MS milliseconds.  Interrupts must be
    turned on. */
 void
@@ -175,7 +174,8 @@ timer_print_stats (void)
 {
   printf ("Timer: %"PRId64" ticks\n", timer_ticks ());
 }
-
+
+//Dara is driving
 /* Timer interrupt handler. */
 static void
 timer_interrupt (struct intr_frame *args UNUSED)
