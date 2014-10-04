@@ -91,7 +91,9 @@ timer_elapsed (int64_t then)
 void
 timer_sleep (int64_t ticks) 
 {
-  int64_t start = timer_ticks ();
+  int64_t start = timer_ticks ();    /* maybe this should be a 
+           global variable? or is this how it was set up before?
+           would we be allowed to change it? */
   
 
   ASSERT (intr_get_level () == INTR_ON);
@@ -99,10 +101,11 @@ timer_sleep (int64_t ticks)
   {
      sema_down(thread_current() -> sema);
      //list_push_back(&ready_list, &thread_current() -> elem);
-
      /* ^shouldn't put thread on ready queue until at least a
         certain number of ticks has passed */
+
      list_push_back(&sleep_list, &thread_current() -> elem);
+
      /* if we use sleep_list() here, what is the waiting queue
         for? */
      list_remove(&thread_current() -> elem);
