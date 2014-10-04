@@ -9,8 +9,6 @@
 #include "threads/thread.h"
   
 /* See [8254] for hardware details of the 8254 timer chip. */
-extern struct list ready_list;
-extern struct list sleep_list;
 
 #if TIMER_FREQ < 19
 #error 8254 timer requires TIMER_FREQ >= 19
@@ -89,7 +87,7 @@ timer_elapsed (int64_t then)
 /* Sleeps for approximately TICKS timer ticks.  Interrupts must
    be turned on. */
 
-//Sophie is driving
+//Sophie and Dara are driving
 void
 timer_sleep (int64_t ticks) 
 {
@@ -100,10 +98,22 @@ timer_sleep (int64_t ticks)
   if (timer_elapsed (start) < ticks)
   {
      sema_down(thread_current() -> sema);
-     list_push_back(&ready_list, &(thread_current() -> elem));
-     list_remove(&(thread_current() -> elem));
+     //list_push_back(&ready_list, &thread_current() -> elem);
+
+     /* ^shouldn't put thread on ready queue until at least a
+        certain number of ticks has passed */
+     list_push_back(&sleep_list, &thread_current() -> elem);
+     /* if we use sleep_list() here, what is the waiting queue
+        for? */
+     list_remove(&thread_current() -> elem);
      
   }
+  /* possibly an else() statement? how else would we know if the 
+     if the number of ticks is up? */
+  // when on waiting queue, doesn't have to wake up
+  // only needs to wake up when it can run again?
+  /* also, the thread that called sema_down() isn't necessarily
+     the one that calls sema_up */
 } 
 /* Sleeps for approximately MS milliseconds.  Interrupts must be
    turned on. */

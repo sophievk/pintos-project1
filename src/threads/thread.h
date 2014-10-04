@@ -82,6 +82,9 @@ typedef int tid_t;
    only because they are mutually exclusive: only a thread in the
    ready state is on the run queue, whereas only a thread in the
    blocked state is on a semaphore wait list. */
+extern struct list ready_list;
+extern struct list sleep_list;
+
 struct thread
   {
     //Dara is driving

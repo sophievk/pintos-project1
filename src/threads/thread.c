@@ -22,11 +22,11 @@
 
 /* List of processes in THREAD_READY state, that is, processes
    that are ready to run but not actually running. */
-static struct list ready_list;
+ struct list ready_list;
 
 /* List of processes in THREAD_BLOCKED state, that is, processes
    that are blocked from running and are sleeping. */
-static struct list sleep_list;
+ struct list sleep_list;
 
 /* List of all processes.  Processes are added to this list
    when they are first scheduled and removed when they exit. */
