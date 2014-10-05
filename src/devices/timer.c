@@ -20,6 +20,9 @@
 /* Number of timer ticks since OS booted. */
 static int64_t ticks;
 
+/* Number of timer ticks when function first called. */
+static int64_t start;
+
 /* Number of loops per timer tick.
    Initialized by timer_calibrate(). */
 static unsigned loops_per_tick;
@@ -91,25 +94,24 @@ timer_elapsed (int64_t then)
 void
 timer_sleep (int64_t ticks) 
 {
-  int64_t start = timer_ticks ();    /* maybe this should be a 
-           global variable? or is this how it was set up before?
-           would we be allowed to change it? */
-  
+  //int64_t start = timer_ticks ();  
+  start = timer_ticks ();
 
   ASSERT (intr_get_level () == INTR_ON);
   if (timer_elapsed (start) < ticks)
   {
-     sema_down(thread_current() -> sema);
+    // sema_down(thread_current() -> sema);
      //list_push_back(&ready_list, &thread_current() -> elem);
      /* ^shouldn't put thread on ready queue until at least a
         certain number of ticks has passed */
 
-     list_push_back(&sleep_list, &thread_current() -> elem);
+    list_push_back(&sleep_list, &thread_current() -> elem);
 
      /* if we use sleep_list() here, what is the waiting queue
         for? */
-     list_remove(&thread_current() -> elem);
+   // list_remove(&thread_current() -> elem);
      
+     sema_down(&thread_current() -> sema);
   }
   /* possibly an else() statement? how else would we know if the 
      if the number of ticks is up? */
@@ -193,12 +195,14 @@ timer_print_stats (void)
 static void
 timer_interrupt (struct intr_frame *args UNUSED)
 {
-  int t = timer_ticks();
   ticks++;
   thread_tick ();
-  if (timer_elapsed (t) == ticks) // need to compare time elapsed and tick limit
+  if (timer_elapsed (start) == ticks-start) // need to compare time elapsed and tick limit
   {
-     //move thread to ready_list
+     //list_push_front(&ready_list, list_front(&thread_current() -> sema -> waiters));
+     //list_pop_front(&thread_current() -> sema -> waiters);
+     //sema_up (list_entry (list_pop_front (&sleep_list), struct thread, elem) -> sema);
+     sema_up (&thread_current() -> sema);
   }
   // figure out where to put sema_up (doesn't have to be in this function)
   // goes somewhere where the code executes in kernel mode
