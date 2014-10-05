@@ -197,7 +197,7 @@ timer_interrupt (struct intr_frame *args UNUSED)
 {
   ticks++;
   thread_tick ();
-  if (timer_elapsed (start) == ticks-start) // need to compare time elapsed and tick limit
+  if (timer_elapsed (start) ==  ticks-start) // need to compare time elapsed and tick limit
   {
      //list_push_front(&ready_list, list_front(&thread_current() -> sema -> waiters));
      //list_pop_front(&thread_current() -> sema -> waiters);
