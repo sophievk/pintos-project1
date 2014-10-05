@@ -101,24 +101,18 @@ timer_sleep (int64_t ticks)
   if (timer_elapsed (start) < ticks)
   {
     // sema_down(thread_current() -> sema);
-     //list_push_back(&ready_list, &thread_current() -> elem);
-     /* ^shouldn't put thread on ready queue until at least a
-        certain number of ticks has passed */
-
+    struct semaphore current = thread_current() -> sema;
+    sema_down(&thread_current() -> sema);
+    //printf("list size: %zd", list_size(&sleep_list));
+    //sema_up(&thread_current() -> sema);
     list_push_back(&sleep_list, &thread_current() -> elem);
 
      /* if we use sleep_list() here, what is the waiting queue
         for? */
    // list_remove(&thread_current() -> elem);
      
-     sema_down(&thread_current() -> sema);
+  //   sema_down(&thread_current() -> sema);
   }
-  /* possibly an else() statement? how else would we know if the 
-     if the number of ticks is up? */
-  // when on waiting queue, doesn't have to wake up
-  // only needs to wake up when it can run again?
-  /* also, the thread that called sema_down() isn't necessarily
-     the one that calls sema_up */
 } 
 /* Sleeps for approximately MS milliseconds.  Interrupts must be
    turned on. */
@@ -197,15 +191,15 @@ timer_interrupt (struct intr_frame *args UNUSED)
 {
   ticks++;
   thread_tick ();
-  if (timer_elapsed (start) == ticks-start) // need to compare time elapsed and tick limit
+  while (timer_elapsed (start) == (ticks-start))
   {
-     //list_push_front(&ready_list, list_front(&thread_current() -> sema -> waiters));
-     //list_pop_front(&thread_current() -> sema -> waiters);
-     //sema_up (list_entry (list_pop_front (&sleep_list), struct thread, elem) -> sema);
      sema_up (&thread_current() -> sema);
+     list_push_back(&ready_list, list_pop_front(&sleep_list));
+     //list_pop_front(&thread_current() -> sema -> waiters);
+     //sema_up (&list_entry (list_front (&sleep_list), struct thread, elem) -> sema);
+     //list_pop_front (&sleep_list);
+     //sema_up (&thread_current() -> sema);
   }
-  // figure out where to put sema_up (doesn't have to be in this function)
-  // goes somewhere where the code executes in kernel mode
 }
 
 /* Returns true if LOOPS iterations waits for more than one timer

@@ -98,16 +98,11 @@ thread_init (void)
   list_init (&sleep_list); //initialize list of sleeping threads
   list_init (&all_list);
 
- // sema_init(running_thread () -> sema, 0);
-
   /* Set up a thread structure for the running thread. */
   initial_thread = running_thread ();
   init_thread (initial_thread, "main", PRI_DEFAULT);
   initial_thread->status = THREAD_RUNNING;
   initial_thread->tid = allocate_tid ();
-  
-  /*initialize a semaphore for the thread*/
-  //sema_init(initial_thread -> sema, 0);
 }
 
 /* Starts preemptive thread scheduling by enabling interrupts.
@@ -481,7 +476,7 @@ init_thread (struct thread *t, const char *name, int priority)
   t->priority = priority;
   t->magic = THREAD_MAGIC;
   list_push_back (&all_list, &t->allelem);
-  sema_init(&t -> sema, 0);
+  sema_init(&t -> sema, 0); //initializes the semaphore
 }
 
 /* Allocates a SIZE-byte frame at the top of thread T's stack and
