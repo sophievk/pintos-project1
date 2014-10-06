@@ -24,11 +24,7 @@ Dara, 30 mintues
 Sophie, 30 minutes
 Dara, 30 mintues
 
-<<<<<<< HEAD
-10/4, 6:30p - 11:30p , Dara, Sophie, 5 hours
-=======
 10/4, 4:30p - 11:30p, Dara, Sophie, 7 hours
->>>>>>> 279f2a500cf09172e04d0d5440b3007271541221
 Driver Order and Time Length:
 Sophie, 30 minutes
 Dara, 30 mintues
@@ -40,10 +36,7 @@ Sophie, 30 minutes
 Dara, 30 mintues
 Sophie, 30 minutes
 Dara, 30 mintues
-<<<<<<< HEAD
-=======
 Sophie, 30 minutes
 Dara, 30 mintues
 Sophie, 30 minutes
 Dara, 30 mintues
->>>>>>> 279f2a500cf09172e04d0d5440b3007271541221
